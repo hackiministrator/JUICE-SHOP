@@ -2,4 +2,4 @@
 JUICE SHOP VULNERABILITY
 md id ="x7wq4h"
 
-![Admin dd](mod.png)
+![Admin dd](images/admin.png)
