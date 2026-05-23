@@ -1,5 +1,118 @@
 # JUICE-SHOP
-JUICE SHOP VULNERABILITY
-md id ="x7wq4h"
+Broken Access Control – Privilege Escalation via Role Manipulation
 
+🧾 Summary
+
+A critical Broken Access Control vulnerability was discovered in the account registration process.
+The application allows a user to modify their assigned role during account creation, enabling a normal user to escalate privileges to an administrator.
+
+This occurs because the backend trusts user-controlled input for role assignment instead of enforcing server-side authorization.
+
+⸻
+
+ Affected Component
+ • User Registration Endpoint
+ • Account Creation Flow
+
+⸻
+
+ Steps to Reproduce
+
+1. Create a Normal User Account
+
+Register a new account using the application’s standard signup form.
+
+⸻
+
+2. Intercept the Request/Response
+
+Using a ZAP, capture the registration request and response.
+
+The response contains:
+
+{
+  "username": "bob ",
+  "role": "customer"
+}
 ![Admin dd](images/admin.png)
+
+This indicates the default role assigned by the server.
+
+⸻
+
+3. Modify the Request
+   ![Admin req](images/adminreq.png)
+
+Copy the request and send it to the request editor.
+
+Change the role parameter from:
+
+"role": "customer"
+to:
+
+"role": "admin"
+
+4. Forward the Modified Request
+
+Send the modified request to the server.
+
+⸻
+
+5. Result
+
+The account is created successfully with elevated privileges:
+ • Role is set to admin
+ • No validation or restriction is enforced by the server
+
+⸻
+
+ Proof of Concept
+ • Registration request showing modified role parameter
+ • Response confirming role assignment
+ • Access to admin-only features/dashboard
+
+⸻
+
+ Impact
+
+This vulnerability allows an attacker to:
+ • Escalate privileges from normal user → admin
+ • Access restricted administrative functionalities
+ • View or modify sensitive data
+ • Fully compromise application integrity
+
+This is a critical security issue under OWASP Top 10: A01 – Broken Access Control.
+
+⸻
+
+ Root Cause
+
+The application trusts client-side input for sensitive fields such as:
+ • User role
+ • Access level
+
+Instead of enforcing role assignment strictly on the backend.
+
+⸻
+
+🛠️ Recommended Fix
+ • Never accept role values from client-side input during registration
+ • Assign user roles only on the server side
+ • Implement strict authorization checks on all admin routes
+ • Validate and sanitize all incoming requests
+ • Enforce role-based access control (RBAC)
+
+⸻
+ Severity
+Critical
+
+⸻
+
+ Notes
+
+This issue demonstrates a classic privilege escalation scenario caused by improper authorization handling. Proper server-side validation would completely prevent this attack.
+
+
+
+
+
