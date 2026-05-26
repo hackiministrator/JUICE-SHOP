@@ -34,7 +34,7 @@ The response contains:
   "username": "bob ",
   "role": "customer"
 }
-![Admin dd](images/admin.png)
+![Admin dd](images/adminerq.png)
 
 This indicates the default role assigned by the server.
 
